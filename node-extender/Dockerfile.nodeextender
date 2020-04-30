@@ -1,0 +1,22 @@
+FROM ubuntu:18.04
+
+WORKDIR /
+
+RUN apt-get update && \
+    apt-get install --yes curl jq libssl1.0.0 libpq5
+
+RUN LATEST=`curl -s https://api.github.com/repos/uno-labs/semux-node-extender/releases/latest | jq '.assets[]  | select(.name | contains("linux") and endswith("tar.gz"))'` && \
+    LINK=`echo ${LATEST} | jq -r '.browser_download_url'` && \
+    TARBALL=`echo ${LATEST} | jq -r '.name'` && \
+    curl -Lo ${TARBALL} ${LINK} && \
+    mkdir -p /node-extender && \
+    tar -xzf ${TARBALL} -C /node-extender --strip-components=1 && \
+    rm ${TARBALL} && \
+    DIRNAME=`echo ${TARBALL} | rev | cut -c 8- | rev` && \
+    cd /node-extender && \
+    mv ${DIRNAME}/* . && \
+    rm -rf ${DIRNAME}
+    
+RUN apt-get remove --yes jq
+
+ENTRYPOINT ["/node-extender/start_linux.sh"]

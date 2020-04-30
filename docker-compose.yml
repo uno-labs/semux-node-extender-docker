@@ -1,0 +1,75 @@
+# Semux-node-extender
+version: '3.1'
+
+services:
+
+  db:
+    build:
+      context: ./db
+      dockerfile: Dockerfile.database
+    image: semux-db-pg
+    environment:
+      #Settings of the database service
+      POSTGRES_PASSWORD: 
+      POSTGRES_USER: 
+      POSTGRES_DB: 
+      #Settings of the fullnode service
+      FULLNODE_API_USER_NAME: 
+      FULLNODE_API_USER_PASSWORD: 
+      #Settings of the node-extender service
+      NE_VALIDATOR_NAME:  
+      NE_VALIDATOR_COMISSION: 
+      NE_POOLS_ADDR: 
+      NE_PAYOUT_ADDR: 
+      NE_START_BLOCK_ID: 
+      NE_PAYMENT_PERIOD: 
+      NE_TX_FEE: 
+      NE_MIN_PAYOUT: 
+      NE_VOTES_MIN_AGE: 
+    volumes:
+      - 'pg_data:/var/lib/postgresql/data'
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.1
+
+  fullnode:
+    build:
+      context: ./full-node
+      dockerfile: Dockerfile.fullnode
+    image: semux-fullnode
+    environment:
+      SEMUX_WALLET_PASSWORD: 
+    volumes:
+      - "./full-node/config:/semux/config"
+      - "./full-node/wallet.data:/semux/wallet.data"
+      - "./full-node/debug.log:/semux/debug.log"
+      - "./full-node/database:/semux/database"
+    ports:
+      - 5161:5161
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.2
+
+  nodeextender:
+    build:
+      context: ./node-extender/
+      dockerfile: Dockerfile.nodeextender
+    image: semux-node-extender
+    volumes:
+      - "./node-extender/config.json:/node-extender/Bin/Resources/AppServer/config.json"
+    depends_on:
+     - fullnode
+     - db
+    networks:
+      static-network:
+        ipv4_address: 172.20.128.3
+
+volumes:
+  pg_data:
+    driver: local
+
+networks:
+  static-network:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

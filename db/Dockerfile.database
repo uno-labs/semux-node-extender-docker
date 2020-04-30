@@ -1,0 +1,7 @@
+FROM postgres:latest
+
+WORKDIR /
+
+RUN  mkdir -p /docker-entrypoint-initdb.d
+
+COPY pg-init-scripts/* /docker-entrypoint-initdb.d/
