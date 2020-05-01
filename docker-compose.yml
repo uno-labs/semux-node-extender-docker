@@ -8,6 +8,7 @@ services:
       context: ./db
       dockerfile: Dockerfile.database
     image: semux-db-pg
+    restart: always
     environment:
       #Settings of the database service
       POSTGRES_PASSWORD: 
@@ -37,6 +38,7 @@ services:
       context: ./full-node
       dockerfile: Dockerfile.fullnode
     image: semux-fullnode
+    restart: always
     environment:
       SEMUX_WALLET_PASSWORD: 
     volumes:
@@ -55,6 +57,7 @@ services:
       context: ./node-extender/
       dockerfile: Dockerfile.nodeextender
     image: semux-node-extender
+    restart: always
     volumes:
       - "./node-extender/config.json:/node-extender/Bin/Resources/AppServer/config.json"
     depends_on:
