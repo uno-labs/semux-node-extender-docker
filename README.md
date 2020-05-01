@@ -119,13 +119,18 @@ FULLNODE_API_USER_PASSWORD: api.password from ./full-node/config/semux.propertie
 
 PM_VALIDATOR_NAME:      title of your validator
 PM_VALIDATOR_COMISSION: commission of a transaction, percentage (0.00-100.00)
-PM_POOLS_ADDR:          addresses of validators. Each is starting at 0x... and in double quotation marks
-PM_PAYOUT_ADDR:         address of payout wallet. Start it at 0x..
+PM_POOLS_ADDR:          addresses of validators (see below)
+PM_PAYOUT_ADDR:         address of payout wallet. Start it at 0x... and in double quotation marks
 PM_START_BLOCK_ID:      block number for beginning payouts (find it on https://semux.top)
 PM_PAYMENT_PERIOD:      number of blocks between payouts
 PM_TX_FEE:              tax of the transaction, nano SEM (min 0.005 SEM)
 PM_MIN_PAYOUT:          minimum payout in a period, nano SEM
 PM_VOTES_MIN_AGE:       minimum number of blocks a vote age
+```
+
+Setup of the ***PM_POOLS_ADDR*** field:
+```
+PM_POOLS_ADDR: "\"0x...\",\"0x...\""
 ```
 
 Set access rights of the ```docker-compose.yml``` file:
